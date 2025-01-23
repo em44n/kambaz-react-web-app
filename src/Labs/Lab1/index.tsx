@@ -255,7 +255,7 @@ Please
 to get dummy text<br/>
 
 Please
-<a href="https://www.lipsum.com" id="wd-github">click here</a>
+<a href="https://github.com/em44n/kambaz-react-web-app" id="wd-github">click here</a>
 to go to my GitHub repository<br/>
       </div>
   );}
