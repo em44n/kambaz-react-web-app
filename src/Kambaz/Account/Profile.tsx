@@ -1,19 +1,41 @@
+import { Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 export default function Profile() {
   return (
-    <div id="wd-profile-screen">
-      <h3>Profile</h3>
-      <input defaultValue="alice" placeholder="username" className="wd-username"/><br/>
-      <input defaultValue="123"   placeholder="password" type="password"
-             className="wd-password" /><br/>
-      <input defaultValue="Alice" placeholder="First Name" id="wd-firstname" /><br/>
-      <input defaultValue="Wonderland" placeholder="Last Name" id="wd-lastname" /><br/>
-      <input defaultValue="2000-01-01" type="date" id="wd-dob" /><br/>
-      <input defaultValue="alice@wonderland" type="email" id="wd-email" /><br/>
-      <select defaultValue="FACULTY" id="wd-role">
-        <option value="USER">User</option>       <option value="ADMIN">Admin</option>
+    <div id="wd-profile-screen" className="wd-sign-in-offset">
+      <h1>Profile</h1>
+      <Form.Control id="wd-username"
+             placeholder="username"
+             className="form-spacing"
+             defaultValue="alice"
+             /><br />
+      <Form.Control id="wd-password"
+             placeholder="password" type="password"
+             className="form-spacing"
+             defaultValue="123"/><br />
+      <Form.Control id="wd-firstname"
+             placeholder="First Name"
+             className="form-spacing"
+             defaultValue="Alice"/><br />
+      <Form.Control id="wd-lastname"
+             placeholder="Last Name"
+             className="form-spacing"
+             defaultValue="Wonderland"/><br />
+      <Form.Control id="wd-dob"
+             type="date"
+             className="form-spacing"
+             defaultValue="2000-01-01"/><br />
+      <Form.Control id="wd-email"
+             className="form-spacing"
+             type="email"
+             defaultValue="alice@wonderland"/><br />
+      <Form.Control as="select" id="wd-role" defaultValue="FACULTY">
+      <option value="USER">User</option>       <option value="ADMIN">Admin</option>
         <option value="FACULTY">Faculty</option> <option value="STUDENT">Student</option>
-      </select><br/>
-      <Link to="/Kambaz/Account/Signin" >Sign out</Link>
+      </Form.Control>
+      <Link id="wd-signout-btn"
+            to="/Kambaz/Account/Signing"
+            className="mt-3 btn btn-primary w-100 mb-2 bg-danger">
+            Signout </Link><br />
     </div>
 );}
