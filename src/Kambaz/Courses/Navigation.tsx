@@ -1,8 +1,14 @@
-import { Link } from "react-router-dom";
+import { ListGroup } from "react-bootstrap";
+import { Link, useLocation, useParams } from "react-router-dom";
 export default function CourseNavigation() {
+  const links = ["Home", "Modules", "Piazza", "Zoom", "Assignments", "Quizzes", "Grades", "People"];
+  const { pathname } = useLocation();
+  const { cid } = useParams();
+
   return (
-    <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
-      <Link to="/Kambaz/Courses/1234/Home" id="wd-course-home-link"
+    <ListGroup id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
+
+      {/* <Link to="/Kambaz/Courses/1234/Home" id="wd-course-home-link"
         className="list-group-item active border border-0"> Home </Link>
       <Link to="/Kambaz/Courses/1234/Modules" id="wd-course-modules-link"
         className="list-group-item text-danger border border-0"> Modules </Link>
@@ -15,6 +21,13 @@ export default function CourseNavigation() {
       <Link to="/Kambaz/Courses/1234/Quizzes" id="wd-course-assignments-link"
         className="list-group-item text-danger border border-0"> Quizzes </Link>
       <Link to="/Kambaz/Courses/1234/People" id="wd-course-people-link"
-        className="list-group-item text-danger border border-0" > People </Link>
-    </div>
+        className="list-group-item text-danger border border-0" > People </Link> */}
+
+        {links.map((link) => (
+        <ListGroup.Item key={link} as={Link} to={`/Kambaz/Courses/${cid}/${link}`} className={`list-group-item border-0
+              ${pathname.includes(link) ? "active border" : "text-danger border"}`}>
+          {link}
+        </ListGroup.Item>
+      ))}
+      </ListGroup>
 );}

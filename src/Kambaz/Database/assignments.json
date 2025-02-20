@@ -1,0 +1,11 @@
+[
+    { "_id": "A101", "title": "Propulsion Assignment", "course": "RS101", "releaseDate": "February 19", "dueDate": "February 21", "points": 100 },
+    { "_id": "A102", "title": "Combustion Analysis", "course": "RS101", "releaseDate": "February 20", "dueDate": "February 22", "points": 90 },
+    { "_id": "A103", "title": "Nozzle Design Project", "course": "RS101", "releaseDate": "February 21", "dueDate": "February 23", "points": 120 },
+    { "_id": "A201", "title": "Aerodynamics Quiz", "course": "RS102", "releaseDate": "February 22", "dueDate": "February 24", "points": 50 },
+    { "_id": "A202", "title": "Flow Analysis", "course": "RS102", "releaseDate": "February 23", "dueDate": "February 25", "points": 80 },
+    { "_id": "A203", "title": "Heating Analysis", "course": "RS102", "releaseDate": "February 24", "dueDate": "February 26", "points": 100 },
+    { "_id": "A301", "title": "Structural Design Task", "course": "RS103", "releaseDate": "February 25", "dueDate": "February 27", "points": 110 },
+    { "_id": "A302", "title": "Orbital Calculations", "course": "RS103", "releaseDate": "February 26", "dueDate": "February 28", "points": 95 },
+    { "_id": "A303", "title": "Systems Engineering Exam", "course": "RS103", "releaseDate": "February 27", "dueDate": "February 29", "points": 130 }
+]
