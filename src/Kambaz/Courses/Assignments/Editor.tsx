@@ -1,11 +1,25 @@
 import { Button, Form, FormControl, InputGroup, Table } from "react-bootstrap";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import * as db from "../../Database";
+import { useDispatch } from "react-redux";
+import { addAssignment } from "./reducer";
 
 export default function AssignmentEditor() {
-  const { aid } = useParams();
+  const { cid, aid } = useParams();
   const assignment = db.assignments.find((assignment) => assignment._id === aid);
   
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleSave = () => {
+    dispatch(addAssignment(assignment));
+    navigate(`/Kambaz/Courses/${cid}/Assignments`);
+  };
+
+  const handleCancel = () => {
+    navigate(`/Kambaz/Courses/${cid}/Assignments`);
+  };
+
     return (
       <div id="wd-assignments-editor">
         <label htmlFor="wd-name">Assignment Name</label><br />
@@ -81,7 +95,11 @@ export default function AssignmentEditor() {
         </tbody>
       </Table>
       <br />
-      <Button variant="secondary">Cancel</Button> <Button variant="danger">Save</Button>
-    </div>
+      <Button variant="secondary" onClick={handleSave}>
+          Save
+        </Button>
+        <Button variant="danger" onClick={handleCancel} className="ms-2">
+          Cancel
+        </Button>    </div>
   );
 }
