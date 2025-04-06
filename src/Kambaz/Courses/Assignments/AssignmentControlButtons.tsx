@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { deleteAssignment } from "./reducer";
 import { useState } from "react";
 import AssignmentDeleter from "./AssignmentDeleter";
+import * as assignmentsClient from "./client";
 
 export default function AssignmentControlButtons({ assignmentId }: { assignmentId: string }) {
   const dispatch = useDispatch();
@@ -12,8 +13,13 @@ export default function AssignmentControlButtons({ assignmentId }: { assignmentI
      const handleClose = () => setShow(false);
      const handleShow = () => setShow(true);
 
+     const removeAssignment = async (assignmentId: string) => {
+      await assignmentsClient.deleteAssignment(assignmentId);
+      dispatch(deleteAssignment(assignmentId));
+    };
+
   const handleDelete = () => {
-    dispatch(deleteAssignment(assignmentId));
+    removeAssignment(assignmentId);
   };
 
   return (

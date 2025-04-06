@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ListGroup } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
@@ -7,14 +8,30 @@ import AssignmentControlButtons from "./AssignmentControlButtons";
 import AssignmentsControlButtons from "./AssignmentsControlButtons";
 import { LuNotebookPen } from "react-icons/lu";
 import { useParams } from "react-router";
-import * as db from "../../Database";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setAssignments } from "./reducer";
+import * as coursesClient from "../client";
+import { useEffect } from "react";
+
+
 
 
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = db.assignments;
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const dispatch = useDispatch();
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  
+
+
+
+  const fetchAssignments = async () => {
+    const modules = await coursesClient.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignments(modules));
+  };
+  useEffect(() => {
+      fetchAssignments();
+  }, []);
 
   return (
     <div id="wd-assignments">
@@ -27,8 +44,7 @@ export default function Assignments() {
           </div>
           <ListGroup className="wd-lessons rounded-0">
             {assignments
-              .filter((assignment) => assignment.course === cid)
-              .map((assignment) => (
+              .map((assignment: any) => (
               <ListGroup.Item key={assignment._id} className="wd-lesson p-3 ps-1">
                 <p className="a-padding">
                   <a href={`#/Kambaz/Courses/${cid}/Assignments/${assignment._id}`} className="wd-assignment-link">

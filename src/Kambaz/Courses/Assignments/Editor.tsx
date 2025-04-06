@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Form, FormControl, InputGroup, Table } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router";
 import * as db from "../../Database";
 import { useDispatch } from "react-redux";
 import { addAssignment } from "./reducer";
+import * as assignmentsClient from "./client";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
@@ -11,8 +13,14 @@ export default function AssignmentEditor() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSave = () => {
+
+  const saveAssignment = async (assignment: any) => {
+    await assignmentsClient.updateAssignment(assignment);
     dispatch(addAssignment(assignment));
+  };
+
+  const handleSave = () => {
+    saveAssignment(aid);
     navigate(`/Kambaz/Courses/${cid}/Assignments`);
   };
 

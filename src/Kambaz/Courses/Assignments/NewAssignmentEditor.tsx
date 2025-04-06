@@ -3,25 +3,30 @@ import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { Form, Button, Table } from "react-bootstrap";
 import { addAssignment } from "./reducer";
+import { createAssignmentForCourse } from "../client";
+
 
 export default function NewAssignmentEditor() {
   const { cid } = useParams();
   const [assignment, setAssignment] = useState({
-    name: "",
-    description: "",
-    points: 0,
+    _id: "",
+    title: "",
+    course: cid,
+    releaseDate: "",
     dueDate: "",
+    points: 0,
+    description: "",
     availableFrom: "",
     availableUntil: "",
-    course: cid,
   });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSave = () => {
-    dispatch(addAssignment(assignment));
-    navigate(`/Kambaz/Courses/${cid}/Assignments`);
+  const handleSave = async () => {
+      const createdAssignment = await createAssignmentForCourse(cid as string, assignment);
+      dispatch(addAssignment(createdAssignment)); 
+      navigate(`/Kambaz/Courses/${cid}/Assignments`);
   };
 
   const handleCancel = () => {
@@ -35,8 +40,8 @@ export default function NewAssignmentEditor() {
           <Form.Label>Assignment Name</Form.Label>
           <Form.Control
             type="text"
-            value={assignment.name}
-            onChange={(e) => setAssignment({ ...assignment, name: e.target.value })}
+            value={assignment.title}
+            onChange={(e) => setAssignment({ ...assignment, title: e.target.value })}
           />
         </Form.Group>
         <br></br>
