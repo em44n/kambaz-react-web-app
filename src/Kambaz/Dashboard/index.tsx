@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { enrollCourse, setEnrollments, unenrollCourse } from "../Courses/enrollmentReducer";
-import { fetchEnrollments } from "../Courses/enrollmentClient";
+import { fetchEnrollments, enrollInCourse, unenrollFromCourse } from "../Courses/enrollmentClient";
 import { fetchAllCourses } from "../Courses/client";
 
 export default function Dashboard(
@@ -18,13 +18,16 @@ export default function Dashboard(
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments } = useSelector((state: any) => state.enrollmentReducer);    const dispatch = useDispatch();
     const [enrolledin, setEnrolledin] = useState(false);
-    const [allCourses, setAllCourses] = useState<any[]>([]); // State for all courses
-
+    const [allCourses, setAllCourses] = useState<any[]>([]);
 
     useEffect(() => {
       const loadEnrollments = async () => {
-        const enrollments = await fetchEnrollments();
-        dispatch(setEnrollments(enrollments));
+        try {
+          const enrollments = await fetchEnrollments(currentUser._id);
+          dispatch(setEnrollments(enrollments));
+        } catch (error) {
+          console.error('Error loading enrollments:', error);
+        }
       };
 
       const loadAllCourses = async () => {
@@ -36,17 +39,33 @@ export default function Dashboard(
       loadAllCourses();
     }, [dispatch]);
 
-    const handleEnrollment = (courseId: string) => {
-      const isEnrolled = enrollments.some(
-        (enrollment: { user: string; course: string }) =>
-          enrollment.user === currentUser._id && enrollment.course === courseId
-      );
-    
-      if (isEnrolled) {
-        dispatch(unenrollCourse({ user: currentUser._id, course: courseId }));
-      } else {
-        dispatch(enrollCourse({ _id: `${currentUser._id}-${courseId}`, user: currentUser._id, course: courseId }));
+    const handleEnrollment = async (courseId: string) => {
+      try {
+        const isEnrolled = enrollments.some(
+          (enrollment: { user: string; course: string }) =>
+            enrollment.user === currentUser._id && enrollment.course === courseId
+        );
+      
+        if (isEnrolled) {
+          await unenrollFromCourse(courseId);
+          dispatch(unenrollCourse({ user: currentUser._id, course: courseId }));
+        } else {
+          await enrollInCourse(courseId);
+          dispatch(enrollCourse({ _id: `${currentUser._id}-${courseId}`, user: currentUser._id, course: courseId }));
+        }
+      } catch (error) {
+        console.error('Error handling enrollment:', error);
       }
+    };
+
+    const isEnrolled = (courseId: string) => {
+      return enrollments.some((enrollment: any) => {
+        if (typeof enrollment === 'object' && 'user' in enrollment && 'course' in enrollment) {
+          console.log('Checking enrollment:', enrollment);
+          return enrollment.user === currentUser._id && enrollment.course === courseId;
+        }
+        return false;
+      });
     };
 
     let coursesToShow;
@@ -111,13 +130,13 @@ export default function Dashboard(
                   <Card.Body>
                   <button
                       className={
-                        courses.some((enrolledCourse: { _id: string }) => enrolledCourse._id === course._id)
+                        isEnrolled(course._id)
                           ? "btn btn-danger"
                           : "btn btn-success"
                       }
                       onClick={() => handleEnrollment(course._id)}
                     >
-                      {courses.some((enrolledCourse: { _id: string }) => enrolledCourse._id === course._id)
+                      {isEnrolled(course._id)
                         ? "Unenroll"
                         : "Enroll"}
                     </button>

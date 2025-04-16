@@ -15,16 +15,27 @@ const enrollmentSlice = createSlice({
   initialState,
   reducers: {
     setEnrollments: (state, action: PayloadAction<Enrollment[]>) => {
-      state.enrollments = action.payload;
+      state.enrollments = action.payload.filter(
+        (item: any) => 
+          typeof item === 'object' && 
+          'user' in item && 
+          'course' in item
+      );
     },
     enrollCourse: (state, action: PayloadAction<Enrollment>) => {
-      state.enrollments.push(action.payload);
+      const isEnrolled = state.enrollments.some(
+        (enrollment) =>
+          enrollment.user === action.payload.user &&
+          enrollment.course === action.payload.course
+      );
+      if (!isEnrolled) {
+        state.enrollments.push(action.payload);
+      }
     },
     unenrollCourse: (state, action: PayloadAction<{ user: string; course: string }>) => {
       state.enrollments = state.enrollments.filter(
         (enrollment) =>
-          enrollment.user !== action.payload.user ||
-          enrollment.course !== action.payload.course
+          !(enrollment.user === action.payload.user && enrollment.course === action.payload.course)
       );
     },
   },
