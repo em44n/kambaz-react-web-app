@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FaUserCircle } from "react-icons/fa";
-import * as client from "../../Account/client";
 import PeopleDetails from "./Details";
 import { Link } from "react-router-dom";
 
