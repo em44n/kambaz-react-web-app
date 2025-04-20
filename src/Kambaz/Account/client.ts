@@ -36,6 +36,7 @@ export const findMyCourses = async () => {
   };  
 
 export const signin = async (credentials: any) => {
+  console.log("VITE_REMOTE_SERVER = ", import.meta.env.VITE_REMOTE_SERVER);
   const response = await axiosWithCredentials.post(`${USERS_API}/signin`, credentials);
   return response.data;
 };
