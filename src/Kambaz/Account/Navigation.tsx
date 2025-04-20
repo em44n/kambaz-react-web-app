@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export default function AccountNavigation() {
    const { currentUser } = useSelector((state: any) => state.accountReducer);
-   
+   const { pathname } = useLocation();
+
+   const active = (path: string) => (pathname.includes(path) ? "active" : "");
+
   return (
     <div id="wd-account-navigation"
     style={{ width: 120 }} 
@@ -24,6 +27,8 @@ export default function AccountNavigation() {
                className="text-danger fw-bold text-start w-100 ps-2 text-decoration-none">
            Profile </Link>
       )}
+      {currentUser && currentUser.role === "ADMIN" && (
+       <Link to={`/Kambaz/Account/Users`} className={`text-danger fw-bold text-start w-100 ps-2 text-decoration-none list-group-item ${active("Users")}`}> Users </Link> )}
     </div>
   );
 }
