@@ -3,8 +3,8 @@ import { Row, Col, Card, Button, FormControl, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { enrollCourse, setEnrollments, unenrollCourse } from "../Courses/enrollmentReducer";
-import { fetchEnrollments, enrollInCourse, unenrollFromCourse } from "../Courses/enrollmentClient";
+import { setEnrollments } from "../Courses/enrollmentReducer";
+import { fetchEnrollments, enrollIntoCourse, unenrollFromCourse } from "../Courses/enrollmentClient";
 import { fetchAllCourses } from "../Courses/client";
 
 export default function Dashboard(
@@ -37,26 +37,16 @@ export default function Dashboard(
 
       loadEnrollments();
       loadAllCourses();
-    }, [dispatch]);
+    }, [currentUser._id, dispatch]);
 
-    const handleEnrollment = async (courseId: string) => {
-      try {
-        const isEnrolled = enrollments.some(
-          (enrollment: { user: string; course: string }) =>
-            enrollment.user === currentUser._id && enrollment.course === courseId
-        );
-      
-        if (isEnrolled) {
-          await unenrollFromCourse(courseId);
-          dispatch(unenrollCourse({ user: currentUser._id, course: courseId }));
-        } else {
-          await enrollInCourse(courseId);
-          dispatch(enrollCourse({ _id: `${currentUser._id}-${courseId}`, user: currentUser._id, course: courseId }));
-        }
-      } catch (error) {
-        console.error('Error handling enrollment:', error);
+    const updateEnrollment = async (courseId: string, enrolled: boolean) => {
+      if (!enrolled) {
+        await enrollIntoCourse(currentUser._id, courseId);
+      } else {
+        await unenrollFromCourse(currentUser._id, courseId);
       }
     };
+   
 
     const isEnrolled = (courseId: string) => {
       return enrollments.some((enrollment: any) => {
@@ -134,7 +124,7 @@ export default function Dashboard(
                           ? "btn btn-danger"
                           : "btn btn-success"
                       }
-                      onClick={() => handleEnrollment(course._id)}
+                      onClick={() => updateEnrollment(course._id, isEnrolled(course._id))}
                     >
                       {isEnrolled(course._id)
                         ? "Unenroll"

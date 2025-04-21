@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Routes, Route, Navigate } from "react-router";
 import Account from "./Account";
@@ -6,7 +7,6 @@ import KambazNavigation from "./Navigation";
 import Courses from "./Courses";
 import "./styles.css";
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import ProtectedRoute from "./Account/ProtectedRoute";
 // import { useDispatch } from "react-redux";
 import Session from "./Account/Session";
@@ -14,20 +14,25 @@ import * as userClient from "./Account/client";
 import { useSelector } from "react-redux";
 import * as courseClient from "./Courses/client";
 
+
 export default function Kambaz() {
   // const dispatch = useDispatch();
   const [courses, setCourses] = useState<any[]>([]);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const fetchCourses = async () => {
     try {
-      const courses = await userClient.findMyCourses();
+      console.log("🧪 currentUser:", currentUser);
+      const courses = await userClient.findCoursesForUser(currentUser._id);
+      console.log("📚 Courses received:", courses);
       setCourses(courses);
     } catch (error) {
       console.error(error);
     }
   };
   useEffect(() => {
-    fetchCourses();
+    if (currentUser && currentUser._id) {
+      fetchCourses();
+    }
   }, [currentUser]);
 
   const [course, setCourse] = useState<any>({
@@ -35,14 +40,16 @@ export default function Kambaz() {
     startDate: "2023-09-10", endDate: "2023-12-15", image: "/images/reactjs.jpg", description: "New Description",
   });
 
-  const addNewCourse = () => {
-    setCourses([...courses, { ...course, _id: uuidv4() }]);
+  const addNewCourse = async () => {
+    const newCourse = await courseClient.createCourse(course);
+    setCourses([...courses, newCourse]);
   };
 
   const deleteCourse = async (courseId: string) => {
     await courseClient.deleteCourse(courseId);
     setCourses(courses.filter((course) => course._id !== courseId));
-};
+  };
+ 
 
   const updateCourse = async () => {
     await courseClient.updateCourse(course);

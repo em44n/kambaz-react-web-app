@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Modules from "./Modules/index.tsx";
 import CourseNavigation from "./Navigation";
@@ -9,7 +10,7 @@ import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table.tsx";
 import NewAssignmentEditor from "./Assignments/NewAssignmentEditor.tsx";
 import { useEffect, useState } from "react";
-import * as client from "../Account/client";
+import * as client from "./Modules/client";
 
 export default function Courses({ courses }: { courses: any[]; }) {
   const { cid } = useParams();
@@ -17,8 +18,10 @@ export default function Courses({ courses }: { courses: any[]; }) {
   const { pathname } = useLocation();
    const [users, setUsers] = useState<any[]>([]);
    const { uid } = useParams();
+
    const fetchUsers = async () => {
-      const users = await client.findAllUsers();
+    if (!cid) return;
+      const users = await client.findUsersForCourse(cid);
       setUsers(users);
     };
     useEffect(() => {
